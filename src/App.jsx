@@ -1,8 +1,7 @@
-import { useEffect, useState , audioRef } from 'react';
-import soundPrincipal from '../public/sound-principal.mp3'
+import { useEffect, useState, useRef } from 'react';
+import soundPrincipal from '../public/sound-principal.mp3';
 import useSound from 'use-sound';
 import soundEating from '../public/sound-eating.mp3';
-
 
 const GRID_SIZE = 20;
 const INITIAL_SNAKE = [
@@ -25,8 +24,10 @@ const App = () => {
     const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
     return { x: randomX, y: randomY, color: randomColor };
   };
+
   const [playEating] = useSound(soundEating, { volume: 10 });
-  
+  const [audioRef] = useState(useRef(new Audio(soundPrincipal)));
+
   const [snake, setSnake] = useState(INITIAL_SNAKE);
   const [direction, setDirection] = useState(INITIAL_DIRECTION);
   const [apple, setApple] = useState(generateRandomApple());
@@ -105,11 +106,11 @@ const App = () => {
 
         return newSnake;
       });
-     
+
     }, speed);
+
     return () => {
       clearInterval(moveSnake);
-  
     };
   }, [direction, speed]);
 
@@ -171,6 +172,10 @@ const App = () => {
     };
   }, [apple]);
 
+  const handleButtonClick = (newDirection) => {
+    setDirection(newDirection);
+  };
+
   return (
     <div className="game-container">
       <h1>Snake Game</h1>
@@ -199,6 +204,12 @@ const App = () => {
             })}
           </div>
         ))}
+      </div>
+      <div className="direction-buttons">
+        <button onClick={() => handleButtonClick('up')}>↑</button>
+        <button onClick={() => handleButtonClick('down')}>↓</button>
+        <button onClick={() => handleButtonClick('left')}>←</button>
+        <button onClick={() => handleButtonClick('right')}>→</button>
       </div>
       {gameOver && (
         <div className="game-over">
