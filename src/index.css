@@ -1,0 +1,39 @@
+.game-container {
+    text-align: center;
+  }
+  
+  .grid {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .row {
+    display: flex;
+  }
+  
+  .cell {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #ccc;
+  }
+  
+  .snake-head {
+    background-color:#A0522D;
+    border-radius: 50%;
+  }
+  
+  .snake-body {
+    border: 1px solid #A0522D;
+    background-color: #CD853F;
+    border-radius:100%;
+  }
+  
+  .apple {
+    background-color: red;
+  }
+  
+  h1,
+  p {
+    text-align: center;
+  }
+  
