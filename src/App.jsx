@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
-import soundPrincipal from '/sound-principal.mp3';
+import soundPrincipal from '../public/sound-principal.mp3';
 import useSound from 'use-sound';
-import soundEating from '/sound-eating.mp3';
+import soundEating from '../public/sound-eating.mp3';
 
 const GRID_SIZE = 20;
 const INITIAL_SNAKE = [
@@ -26,8 +26,7 @@ const App = () => {
   };
 
   const [playEating] = useSound(soundEating, { volume: 10 });
-  const [audioRef] = useState(useRef(new Audio(soundPrincipal)));
-
+  const audioRef = useRef(null);
 
   const [snake, setSnake] = useState(INITIAL_SNAKE);
   const [direction, setDirection] = useState(INITIAL_DIRECTION);
@@ -177,10 +176,21 @@ const App = () => {
     setDirection(newDirection);
   };
 
+  useEffect(() => {
+    audioRef.current = new Audio(soundPrincipal);
+    audioRef.current.volume = 1;
+    audioRef.current.loop = true;
+    audioRef.current.play();
+
+    return () => {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    };
+  }, []);
+
   return (
     <div className="game-container">
       <h1>Snake Game</h1>
-      <audio ref={audioRef} src={soundPrincipal} autoPlay loop />
       <div className="grid">
         {Array.from({ length: GRID_SIZE }).map((_, rowIndex) => (
           <div key={rowIndex} className="row">
