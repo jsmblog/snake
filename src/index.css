@@ -1,8 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Arima:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arima', cursive;
+}
+@font-face {
+  font-family: 'GameFont';
+  src:url('fonts/gameFont.ttf');
+}
+body {
+  background-color: #9BABB8;
+}
 .game-container {
-    text-align: center;
+    width: 100%;
+    height: 98vh;
   }
-  
+  .CardGame {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0;
+  }
+  .titleGame {
+    text-shadow: 1px 1px 1px white;
+    color: #025464;
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+  }
   .grid {
+    width: 100%;
     display: flex;
     flex-direction: column;
   }
@@ -20,12 +47,14 @@
   .snake-head {
     background-color:#A0522D;
     border-radius: 50%;
+    box-shadow: 0 0 15px 2px #3F72AF;
   }
   
   .snake-body {
     border: 1px solid #A0522D;
     background-color: #CD853F;
     border-radius:100%;
+    box-shadow: 0 0 15px 2px #3F72AF;
   }
   
   .apple {
@@ -36,4 +65,67 @@
   p {
     text-align: center;
   }
-  
+  .CounterScore {
+    color: white;
+    text-shadow: 0 1px 1px black;
+  }
+  .score {
+    position: absolute;
+    top: 5rem;
+    color: #025464;
+  }
+  .direction-buttons {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
+  .direction-buttons button {
+    border-radius: 50%;
+    color: white;
+    font-size: 1.2rem;
+    background-color: #025464;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    padding: 1.5rem;
+    width: 2rem;
+    height: 2rem;
+    position: relative;
+    bottom: 1rem;
+  }
+  .Arrows {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+position: absolute;
+right: 1.2rem;
+  }
+.game-over {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  justify-content: space-around;
+  background-color: #3C486B;
+  width: 20rem;
+  top: 10rem;
+  left: 1.2rem;
+  height: 20rem;
+  border-radius: 10px;
+  font-family:'GameFont' , sans-serif ;
+}
+.GameOver {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1.5rem;
+  text-shadow: 1px 1px 1px black;
+}
+.BtnPlayAgain {
+  font-family: 'Press Start 2P', cursive;
+  padding: 1.1rem 0;
+  border-radius: 7px;
+  background-color: #F45050;
+  color: white;
+  margin: 0 1.2rem;
+  border: 2px solid black;
+  box-shadow: 0 0 3px 2px white;
+}

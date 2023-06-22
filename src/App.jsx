@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
-import soundPrincipal from '../public/sound-principal.mp3';
+import soundPrincipal from '/sound-principal.mp3';
 import useSound from 'use-sound';
-import soundEating from '../public/sound-eating.mp3';
+import soundEating from '/sound-eating.mp3';
 
 const GRID_SIZE = 20;
 const INITIAL_SNAKE = [
@@ -180,7 +180,7 @@ const App = () => {
     audioRef.current = new Audio(soundPrincipal);
     audioRef.current.volume = 1;
     audioRef.current.loop = true;
-    audioRef.current.play();
+    
 
     return () => {
       audioRef.current.pause();
@@ -190,7 +190,8 @@ const App = () => {
 
   return (
     <div className="game-container">
-      <h1>Snake Game</h1>
+      <h1 className='titleGame'>Snake Game</h1>
+      <div className='CardGame'>
       <div className="grid">
         {Array.from({ length: GRID_SIZE }).map((_, rowIndex) => (
           <div key={rowIndex} className="row">
@@ -216,20 +217,21 @@ const App = () => {
           </div>
         ))}
       </div>
+      </div>
       <div className="direction-buttons">
-        <button onClick={() => handleButtonClick('up')}>↑</button>
-        <button onClick={() => handleButtonClick('down')}>↓</button>
-        <button onClick={() => handleButtonClick('left')}>←</button>
-        <button onClick={() => handleButtonClick('right')}>→</button>
+        <button onClick={() => handleButtonClick('up')}> <span className='Arrows'>↑</span></button>
+        <button onClick={() => handleButtonClick('down')}> <span className='Arrows'>↓</span></button>
+        <button onClick={() => handleButtonClick('left')}> <span className='Arrows'>←</span></button>
+        <button onClick={() => handleButtonClick('right')}> <span className='Arrows'>→</span></button>
       </div>
       {gameOver && (
         <div className="game-over">
-          <p>Game Over!</p>
+          <p className='GameOver'>Game Over!</p>
           <p>Your Score: {score}</p>
-          <button onClick={restartGame}>Play Again</button>
+          <button className='BtnPlayAgain' onClick={restartGame}>Play Again</button>
         </div>
       )}
-      <div className="score">Score: {score}</div>
+      <div className="score">Score: <span className='CounterScore'> {score}</span></div>
     </div>
   );
 };
