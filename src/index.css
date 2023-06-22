@@ -109,11 +109,13 @@ right: 1.2rem;
   background-color: #3C486B;
   width: 20rem;
   top: 10rem;
-  left: 1.2rem;
+  margin: 0 1.5rem;
   height: 20rem;
   border-radius: 10px;
   font-family:'GameFont' , sans-serif ;
 }
+
+
 .GameOver {
   font-family: 'Press Start 2P', cursive;
   font-size: 1.5rem;
