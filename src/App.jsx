@@ -1,8 +1,8 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import soundPrincipal from '/sound-principal.mp3';
 import useSound from 'use-sound';
 import soundEating from '/sound-eating.mp3';
-
+import arrow from '../src/img/arrow.png';
 const GRID_SIZE = 20;
 const INITIAL_SNAKE = [
   { x: 10, y: 10 },
@@ -26,7 +26,7 @@ const App = () => {
   };
 
   const [playEating] = useSound(soundEating, { volume: 10 });
-  const audioRef = useRef(null);
+  const [playPrincipal, { stop }] = useSound(soundPrincipal, { volume: 1, loop: true });
 
   const [snake, setSnake] = useState(INITIAL_SNAKE);
   const [direction, setDirection] = useState(INITIAL_DIRECTION);
@@ -172,57 +172,53 @@ const App = () => {
     };
   }, [apple]);
 
+  useEffect(() => {
+    playPrincipal();
+
+    return () => {
+      stop();
+    };
+  }, [playPrincipal, stop]);
+
   const handleButtonClick = (newDirection) => {
     setDirection(newDirection);
   };
-
-  useEffect(() => {
-    audioRef.current = new Audio(soundPrincipal);
-    audioRef.current.volume = 1;
-    audioRef.current.loop = true;
-    
-
-    return () => {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    };
-  }, []);
 
   return (
     <div className="game-container">
       <h1 className='titleGame'>Snake Game</h1>
       <div className='CardGame'>
-      <div className="grid">
-        {Array.from({ length: GRID_SIZE }).map((_, rowIndex) => (
-          <div key={rowIndex} className="row">
-            {Array.from({ length: GRID_SIZE }).map((_, colIndex) => {
-              const isSnakeHead = snake[0].x === colIndex && snake[0].y === rowIndex;
-              const isSnakeBody = snake.some(
-                (segment, index) =>
-                  index > 0 && segment.x === colIndex && segment.y === rowIndex
-              );
-              const isApple = apple.x === colIndex && apple.y === rowIndex;
-              const appleColor = isApple ? apple.color : 'red';
+        <div className="grid">
+          {Array.from({ length: GRID_SIZE }).map((_, rowIndex) => (
+            <div key={rowIndex} className="row">
+              {Array.from({ length: GRID_SIZE }).map((_, colIndex) => {
+                const isSnakeHead = snake[0].x === colIndex && snake[0].y === rowIndex;
+                const isSnakeBody = snake.some(
+                  (segment, index) =>
+                    index > 0 && segment.x === colIndex && segment.y === rowIndex
+                );
+                const isApple = apple.x === colIndex && apple.y === rowIndex;
+                const appleColor = isApple ? apple.color : 'red';
 
-              return (
-                <div
-                  key={`${rowIndex}-${colIndex}`}
-                  className={`cell ${isSnakeHead ? 'snake-head' : ''} ${
-                    isSnakeBody ? 'snake-body' : ''
-                  } ${isApple ? 'apple' : ''}`}
-                  style={isApple ? { backgroundColor: appleColor } : null}
-                />
-              );
-            })}
-          </div>
-        ))}
-      </div>
+                return (
+                  <div
+                    key={`${rowIndex}-${colIndex}`}
+                    className={`cell ${isSnakeHead ? 'snake-head' : ''} ${
+                      isSnakeBody ? 'snake-body' : ''
+                    } ${isApple ? 'apple' : ''}`}
+                    style={isApple ? { backgroundColor: appleColor } : null}
+                  />
+                );
+              })}
+            </div>
+          ))}
+        </div>
       </div>
       <div className="direction-buttons">
-        <button onClick={() => handleButtonClick('up')}> <span className='Arrows'>↑</span></button>
-        <button onClick={() => handleButtonClick('down')}> <span className='Arrows'>↓</span></button>
-        <button onClick={() => handleButtonClick('left')}> <span className='Arrows'>←</span></button>
-        <button onClick={() => handleButtonClick('right')}> <span className='Arrows'>→</span></button>
+        <button onClick={() => handleButtonClick('up')}> <span className='Arrows Arrows_up '><img width={40} src={arrow} alt="" /></span></button>
+        <button onClick={() => handleButtonClick('down')}> <span className='Arrows Arrows_down'><img width={40} src={arrow} alt="" /></span></button>
+        <button onClick={() => handleButtonClick('left')}> <span className='Arrows Arrows_left'><img width={40} src={arrow} alt="" /></span></button>
+        <button onClick={() => handleButtonClick('right')}> <span className='Arrows Arrows_right'><img width={40} src={arrow} alt="" /></span></button>
       </div>
       {gameOver && (
         <div className="game-over">
