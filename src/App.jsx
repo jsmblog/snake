@@ -13,11 +13,11 @@ const INITIAL_SNAKE = [
   { x: 10, y: 12 },
 ];
 const INITIAL_DIRECTION = 'up';
-const COLORS = ['blue', 'green', 'purple', 'gold', 'yellow', 'red', 'violet', 'DarkTurquoise', 'pink', 'Coral', 'Plum', 'Lime', 'SeaGreen', 'Cyan', 'SteelBlue', 'MediumSlateBlue', 'Bisque', 'Wheat', 'DimGray'];
-const SCORE_MULTIPLIERS = [2, 4, 6, 8, 10, 2, 4, 6, 8, 2, 4, 6, 8, 10, 2, 4, 6, 8, 10];
+const COLORS = ['blue', 'green', 'purple', 'gold', 'yellow', 'FireBrick', 'violet', 'DarkTurquoise', 'pink', 'Coral', 'Plum', 'brown', 'SeaGreen', 'peru', 'SteelBlue', 'MediumSlateBlue', 'Bisque', 'Wheat', 'DimGray', 'red', 'Chartreuse', 'Aqua'];
+const SCORE_MULTIPLIERS = [2, 4, 6, 8, 10, 2, 4, 6, 8, 2, 4, 6, 8, 10, 2, 4, 6, 8, 10 , 1 , 1 , 1];
 const SPEED_INCREMENT = 5;
 const INITIAL_SPEED = 203;
-const APPLE_DURATION = 2800;
+const APPLE_DURATION = 2900;
 const APPLE_INTERVAL = 40000;
 
 
@@ -29,6 +29,7 @@ const App = () => {
     const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
     return { x: randomX, y: randomY, color: randomColor };
   };
+  const [highestScore, setHighestScore] = useState(0);
 
   const [playEating] = useSound(soundEating, { volume: 10 });
   const [playPrincipal, { stop }] = useSound(soundPrincipal, { volume: 1, loop: true });
@@ -82,11 +83,11 @@ const App = () => {
   useEffect(() => {
     const bombInterval = setInterval(() => {
       const newBombs = [];
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 15; i++) {
         newBombs.push(generateRandomBomb());
       }
       setBombs(newBombs);
-    }, 60000);
+    }, 20000);
   
     return () => {
       clearInterval(bombInterval);
@@ -142,35 +143,71 @@ const App = () => {
     };
   }, [direction, speed]);
 
+  const animationGameOver = (gameOver) ? "slide-in-right" : ""
+  
+
   useEffect(() => {
     const checkCollision = () => {
       const head = snake[0];
-
+      const handleColorCollision = (color) => {
+        if (color === 'red') {
+          // Reducir la velocidad a la mitad por 10 segundos
+          setSpeed((prevSpeed) => prevSpeed * 3);
+          setTimeout(() => {
+            setSpeed(INITIAL_SPEED);
+          }, 7000);
+        } else if (color === 'Chartreuse') {
+          // Duplicar la velocidad por 15 segundos
+          setSpeed((prevSpeed) => prevSpeed / 1.95);
+          setTimeout(() => {
+            setSpeed(INITIAL_SPEED);
+          }, 7000);
+        }else if (color === 'Aqua') {
+          const segmentsToCut = 4;
+          
+          // Verificar si la serpiente tiene la cantidad suficiente de segmentos para cortar
+          if (snake.length > segmentsToCut) {
+            // Obtener los segmentos más recientes que se deben cortar
+            const segmentsToRemove = snake.slice(-segmentsToCut);
+        
+            // Verificar si los segmentos a cortar están presentes en el cuerpo de la serpiente
+            const shouldCut = segmentsToRemove.every((segment) => snake.includes(segment));
+        
+            if (shouldCut) {
+              // Reducir la longitud de la serpiente eliminando los segmentos
+              setSnake((prevSnake) => prevSnake.slice(0, prevSnake.length - segmentsToCut));
+            }
+          }
+        }
+        
+              
+      };
+  
       if (head.x === apple.x && head.y === apple.y) {
         setSnake((prevSnake) => {
           const newSnake = [...prevSnake];
           newSnake.push({});
           return newSnake;
         });
-
+  
         const scoreMultiplier = SCORE_MULTIPLIERS[COLORS.indexOf(apple.color)];
-
+  
         setScore((prevScore) => prevScore + scoreMultiplier);
         setApple(generateRandomApple());
         playEating();
-
-        if (score % 20 === 0 && score !== 0) {
+  
+        if (score % 10 === 0 && score !== 0) {
           setSpeed((prevSpeed) => Math.max(prevSpeed - SPEED_INCREMENT, 50));
+        }
+        if (apple.color === 'red' || apple.color === 'Chartreuse' || apple.color === 'Aqua') {
+          handleColorCollision(apple.color);
         }
       }
     };
-
-    const collisionInterval = setInterval(checkCollision, 100);
-
-    return () => {
-      clearInterval(collisionInterval);
-    };
-  }, [snake, apple, score]);
+  
+    checkCollision();
+  }, [snake, apple, score, playEating]);
+  
 
   useEffect(() => {
     const changeAppleColor = () => {
@@ -215,7 +252,7 @@ const App = () => {
   useEffect(() => {
     const generateBombs = () => {
       const newBombs = [];
-      for (let i = 0; i < 15; i++) {
+      for (let i = 0; i < 20; i++) {
         newBombs.push(generateRandomBomb());
       }
       setBombs(newBombs);
@@ -228,6 +265,26 @@ const App = () => {
       clearInterval(bombInterval);
     };
   }, []);
+  
+  useEffect(() => {
+    // Obtener la puntuación más alta del localStorage
+    const storedHighestScore = localStorage.getItem('snakeGameHighestScore');
+  
+    if (storedHighestScore) {
+      // Si la puntuación más alta está almacenada, actualizar el estado con su valor
+      setHighestScore(parseInt(storedHighestScore));
+    }
+  }, []);
+  
+  useEffect(() => {
+    if (score > highestScore) {
+      // Si la puntuación actual supera la puntuación más alta, actualizarla
+      setHighestScore(score);
+  
+      // Almacenar la nueva puntuación más alta en el localStorage
+      localStorage.setItem('snakeGameHighestScore', score.toString());
+    }
+  }, [score]);
   
 
   return (
@@ -258,7 +315,6 @@ const App = () => {
     })}
   </div>
 ))}
-
         </div>
       </div>
       <div className="direction-buttons">
@@ -268,13 +324,14 @@ const App = () => {
         <button onClick={() => handleButtonClick('right')}> <span className='Arrows Arrows_right'><img width={40} src={arrow} alt="" /></span></button>
       </div>
       {gameOver && (
-        <div className="game-over">
+        <div className={`${animationGameOver} game-over`}>
           <p className='GameOver'>Game Over!</p>
           <p>Your Score: {score}</p>
           <button className='BtnPlayAgain' onClick={restartGame}>Play Again</button>
         </div>
       )}
       <div className="score">Score: <span className='CounterScore'> {score}</span></div>
+      <div className="highest-score">Highest Score: <span> {highestScore}</span> </div>
     </div>
   );
 };
