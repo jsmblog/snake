@@ -97,6 +97,10 @@ body {
     transform: rotate(90deg);
     margin:  0 -1.5rem;
   }
+  .cell.bomb {
+    background-color: black;
+  }
+  
   .direction-buttons button {
     box-shadow: 3px 2px 5px 3.5px #025464;
     display: flex;
@@ -105,8 +109,8 @@ body {
     align-content: center;
     text-align: center;
     padding: 1.5rem;
-    width: 2rem;
-    height: 2rem;
+    width: 3rem;
+    height: 3rem;
     position: relative;
     bottom: 1rem;
     border: 1px solid #9BABB8;
