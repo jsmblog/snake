@@ -17,8 +17,10 @@ const COLORS = ['blue', 'green', 'purple', 'gold', 'yellow', 'red', 'violet', 'D
 const SCORE_MULTIPLIERS = [2, 4, 6, 8, 10, 2, 4, 6, 8, 2, 4, 6, 8, 10, 2, 4, 6, 8, 10];
 const SPEED_INCREMENT = 5;
 const INITIAL_SPEED = 203;
-const APPLE_DURATION = 2400;
+const APPLE_DURATION = 2800;
 const APPLE_INTERVAL = 40000;
+
+
 
 const App = () => {
   const generateRandomApple = () => {
@@ -213,13 +215,13 @@ const App = () => {
   useEffect(() => {
     const generateBombs = () => {
       const newBombs = [];
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 15; i++) {
         newBombs.push(generateRandomBomb());
       }
       setBombs(newBombs);
     };
   
-    const bombInterval = setInterval(generateBombs, 30000);
+    const bombInterval = setInterval(generateBombs, 20000);
     generateBombs(); // Generar bombas inmediatamente
   
     return () => {

@@ -49,14 +49,14 @@ body {
   .snake-head {
     background-color:#5C8984;
     border-radius: 50%;
-    box-shadow: 0 0 50px 4px #3F72AF;
+    box-shadow: 0 0 50px 6px #3F72AF;
   }
   
   .snake-body {
     border: 1px solid #85A389;
     background-color: #DFFFD8;
     border-radius:100%;
-    box-shadow: 0 0 50px 4px #3F72AF;
+    box-shadow: 0 0 50px 6px #3F72AF;
   }
   
   .apple {
