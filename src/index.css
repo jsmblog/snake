@@ -211,15 +211,16 @@ right: 1.2rem;
   background-color: green;
   transition: width 0.3s ease-in-out;
 }
-.low-health .health-bar-inner {
-  background-color: rgba(255, 0, 0, 0.822);
-}
-.lowred -health .health-bar-inner {
-  background-color: red;
-}
-.medium-health .health-bar-inner {
-  background-color: yellow;
-}
 .lowCas-health .health-bar-inner {
-background-color: rgba(0, 128, 0, 0.849);
+  background-color: rgba(0, 128, 0, 0.705);
+  }
+  .medium-health .health-bar-inner {
+    background-color: yellow;
+  }
+  .lowred-health .health-bar-inner {
+    background-color: red;
+  }
+.low-health .health-bar-inner {
+  background-color: rgba(255, 0, 0, 0.5);
 }
+

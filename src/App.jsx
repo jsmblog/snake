@@ -371,7 +371,7 @@ const [isAlive, setIsAlive] = useState(true)
       <div className="highest-score">Highest Score: <span> {highestScore}</span> </div>
       <div
   className={`health-bar ${
-    health <= 20 ? 'low-health' : health <= 40 ? 'lowred-health' : health <= 50 ? 'medium-health' :  health <= 70 ? 'lowCas-health' : ''
+    health <= 20 ? 'low-health' : health <= 30 ? 'lowred-health' : health <= 50 ? 'medium-health' :  health <= 70 ? 'lowCas-health' : ''
   }`}
 >
   <div className="health-bar-inner" style={{ width: `${health}%` }}></div>
