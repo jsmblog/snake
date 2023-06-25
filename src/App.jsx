@@ -205,7 +205,7 @@ const [isAlive, setIsAlive] = useState(true)
         });
   
         const scoreMultiplier = SCORE_MULTIPLIERS[COLORS.indexOf(apple.color)];
-        const healthIncrease = 8;
+        const healthIncrease = 6.5;
         setHealth((prevHealth) => Math.min(prevHealth + healthIncrease, 100));
         setInterval((prevTimer) => prevTimer + 10);
   
