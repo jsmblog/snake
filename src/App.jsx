@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import soundPrincipal from '/sound-principal.mp3';
 import useSound from 'use-sound';
 import soundEating from '/sound-eating.mp3';
@@ -30,7 +30,8 @@ const App = () => {
     return { x: randomX, y: randomY, color: randomColor };
   };
   const [highestScore, setHighestScore] = useState(0);
-
+  const [health, setHealth] = useState(100);
+const [isAlive, setIsAlive] = useState(true)
   const [playEating] = useSound(soundEating, { volume: 10 });
   const [playPrincipal, { stop }] = useSound(soundPrincipal, { volume: 1, loop: true });
   const [bombs, setBombs] = useState([]);
@@ -53,7 +54,11 @@ const App = () => {
     setSpeed(INITIAL_SPEED);
     clearInterval(appleTimer);
     clearInterval(colorTimer);
+    setIsAlive(true);
+    setHealth(100) // Agrega esta línea para marcar la serpiente como viva nuevamente
   };
+  
+  
 
   useEffect(() => {
     const handleKeyPress = (event) => {
@@ -94,13 +99,17 @@ const App = () => {
     };
   }, []);
     
-
+  const moveSnake = useRef(null);
   useEffect(() => {
     const moveSnake = setInterval(() => {
       setSnake((prevSnake) => {
         const newSnake = [...prevSnake];
         const head = newSnake[0];
         let newHead;
+        if (!isAlive) {
+          clearInterval(moveSnake);
+          return newSnake;
+        }
 
         if (direction === 'up') {
           newHead = { x: head.x, y: (head.y - 1 + GRID_SIZE) % GRID_SIZE };
@@ -120,19 +129,24 @@ const App = () => {
           newHead.x >= GRID_SIZE ||
           newHead.y < 0 ||
           newHead.y >= GRID_SIZE ||
-          bombs.some((bomb) => bomb.x === newHead.x && bomb.y === newHead.y)
+          bombs.some((bomb) => bomb.x === newHead.x && bomb.y === newHead.y) ||
+          newSnake.slice(1).some(
+            (segment) => segment.x === newHead.x && segment.y === newHead.y
+          )
         ) {
           clearInterval(moveSnake);
           setGameOver(true);
-          playExplosion(); // Reproducir el efecto de sonido de explosión
-          return newSnake; // Devolver la serpiente actual sin modificarla
+          playExplosion();
+          return newSnake;
         }
-
         if (newSnake.slice(1).some((segment) => segment.x === newHead.x && segment.y === newHead.y)) {
           clearInterval(moveSnake);
           setGameOver(true);
         }
-
+        if (!isAlive) {
+          clearInterval(moveSnake);
+          return newSnake;
+        }
         return newSnake;
       });
 
@@ -141,7 +155,7 @@ const App = () => {
     return () => {
       clearInterval(moveSnake);
     };
-  }, [direction, speed]);
+  }, [direction, speed ,  isAlive]);
 
   const animationGameOver = (gameOver) ? "slide-in-right" : ""
   
@@ -158,7 +172,7 @@ const App = () => {
           }, 7000);
         } else if (color === 'Chartreuse') {
           // Duplicar la velocidad por 15 segundos
-          setSpeed((prevSpeed) => prevSpeed / 1.95);
+          setSpeed((prevSpeed) => prevSpeed / 1.80);
           setTimeout(() => {
             setSpeed(INITIAL_SPEED);
           }, 7000);
@@ -191,6 +205,9 @@ const App = () => {
         });
   
         const scoreMultiplier = SCORE_MULTIPLIERS[COLORS.indexOf(apple.color)];
+        const healthIncrease = 8;
+        setHealth((prevHealth) => Math.min(prevHealth + healthIncrease, 100));
+        setInterval((prevTimer) => prevTimer + 10);
   
         setScore((prevScore) => prevScore + scoreMultiplier);
         setApple(generateRandomApple());
@@ -205,8 +222,24 @@ const App = () => {
       }
     };
   
-    checkCollision();
+    if (health <= 0) {
+      clearInterval(moveSnake);
+      setGameOver(true);
+      setIsAlive(false); // Agrega esta línea para marcar la serpiente como no viva
+    }
+    checkCollision()
   }, [snake, apple, score, playEating]);
+  
+  useEffect(() => {
+    const timerInterval = setInterval(() => {
+      setHealth((prevHealth) => prevHealth - 1.5);
+    }, 1000);
+    document.querySelector('.health-bar-inner').style.width = `${health}%`;
+    return () => {
+      clearInterval(timerInterval);
+    };
+  }, []);
+  
   
 
   useEffect(() => {
@@ -287,6 +320,10 @@ const App = () => {
   }, [score]);
   
 
+  
+  
+  
+
   return (
     <div className="game-container">
       <h1 className='titleGame'>Snake Game</h1>
@@ -323,7 +360,7 @@ const App = () => {
         <button onClick={() => handleButtonClick('down')}> <span className='Arrows Arrows_down'><img width={40} src={arrow} alt="" /></span></button>
         <button onClick={() => handleButtonClick('right')}> <span className='Arrows Arrows_right'><img width={40} src={arrow} alt="" /></span></button>
       </div>
-      {gameOver && (
+      {gameOver &&  (
         <div className={`${animationGameOver} game-over`}>
           <p className='GameOver'>Game Over!</p>
           <p>Your Score: {score}</p>
@@ -332,6 +369,15 @@ const App = () => {
       )}
       <div className="score">Score: <span className='CounterScore'> {score}</span></div>
       <div className="highest-score">Highest Score: <span> {highestScore}</span> </div>
+      <div
+  className={`health-bar ${
+    health <= 20 ? 'low-health' : health <= 40 ? 'lowred-health' : health <= 50 ? 'medium-health' :  health <= 70 ? 'lowCas-health' : ''
+  }`}
+>
+  <div className="health-bar-inner" style={{ width: `${health}%` }}></div>
+</div>
+
+
     </div>
   );
 };
