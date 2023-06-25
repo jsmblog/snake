@@ -343,7 +343,7 @@ const [isAlive, setIsAlive] = useState(true)
       return (
         <div
           key={`${rowIndex}-${colIndex}`}
-          className={`cell ${isSnakeHead ? 'snake-head' : ''} ${
+          className={`cell  ${isSnakeHead ? 'snake-head' : ''} ${
             isSnakeBody ? 'snake-body' : ''
           } ${isApple ? 'apple' : ''} ${isBomb ? 'bomb' : ''}`}
           style={isApple ? { backgroundColor: appleColor } : null}
