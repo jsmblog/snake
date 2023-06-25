@@ -172,7 +172,7 @@ const [isAlive, setIsAlive] = useState(true)
           }, 7000);
         } else if (color === 'Chartreuse') {
           // Duplicar la velocidad por 15 segundos
-          setSpeed((prevSpeed) => prevSpeed / 1.80);
+          setSpeed((prevSpeed) => prevSpeed / 1.5);
           setTimeout(() => {
             setSpeed(INITIAL_SPEED);
           }, 7000);
@@ -205,7 +205,7 @@ const [isAlive, setIsAlive] = useState(true)
         });
   
         const scoreMultiplier = SCORE_MULTIPLIERS[COLORS.indexOf(apple.color)];
-        const healthIncrease = 6.5;
+        const healthIncrease = 5;
         setHealth((prevHealth) => Math.min(prevHealth + healthIncrease, 100));
         setInterval((prevTimer) => prevTimer + 10);
   
@@ -232,7 +232,7 @@ const [isAlive, setIsAlive] = useState(true)
   
   useEffect(() => {
     const timerInterval = setInterval(() => {
-      setHealth((prevHealth) => prevHealth - .5);
+      setHealth((prevHealth) => prevHealth - 1);
     }, 1000);
     document.querySelector('.health-bar-inner').style.width = `${health}%`;
     return () => {
@@ -318,11 +318,6 @@ const [isAlive, setIsAlive] = useState(true)
       localStorage.setItem('snakeGameHighestScore', score.toString());
     }
   }, [score]);
-  
-
-  
-  
-  
 
   return (
     <div className="game-container">
@@ -371,7 +366,7 @@ const [isAlive, setIsAlive] = useState(true)
       <div className="highest-score">Highest Score: <span> {highestScore}</span> </div>
       <div
   className={`health-bar ${
-    health <= 20 ? 'low-health' : health <= 30 ? 'lowred-health' : health <= 50 ? 'medium-health' :  health <= 70 ? 'lowCas-health' : ''
+    health <= 10 ? 'low-health' : health <= 30 ? 'lowred-health' : health <= 50 ? 'medium-health' :  health <= 70 ? 'lowCas-health' : ''
   }`}
 >
   <div className="health-bar-inner" style={{ width: `${health}%` }}></div>
