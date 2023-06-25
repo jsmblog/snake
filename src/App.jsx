@@ -232,7 +232,7 @@ const [isAlive, setIsAlive] = useState(true)
   
   useEffect(() => {
     const timerInterval = setInterval(() => {
-      setHealth((prevHealth) => prevHealth - 1.5);
+      setHealth((prevHealth) => prevHealth - .5);
     }, 1000);
     document.querySelector('.health-bar-inner').style.width = `${health}%`;
     return () => {
