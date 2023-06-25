@@ -16,7 +16,7 @@ const INITIAL_DIRECTION = 'up';
 const COLORS = ['blue', 'green', 'purple', 'gold', 'yellow', 'FireBrick', 'violet', 'DarkTurquoise', 'pink', 'Coral', 'Plum', 'brown', 'SeaGreen', 'peru', 'SteelBlue', 'MediumSlateBlue', 'Bisque', 'Wheat', 'DimGray', 'red', 'Chartreuse', 'Aqua'];
 const SCORE_MULTIPLIERS = [2, 4, 6, 8, 10, 2, 4, 6, 8, 2, 4, 6, 8, 10, 2, 4, 6, 8, 10 , 1 , 1 , 1];
 const SPEED_INCREMENT = 5;
-const INITIAL_SPEED = 203;
+const INITIAL_SPEED = 200;
 const APPLE_DURATION = 2900;
 const APPLE_INTERVAL = 40000;
 
@@ -205,7 +205,7 @@ const [isAlive, setIsAlive] = useState(true)
         });
   
         const scoreMultiplier = SCORE_MULTIPLIERS[COLORS.indexOf(apple.color)];
-        const healthIncrease = 5;
+        const healthIncrease = 5.3;
         setHealth((prevHealth) => Math.min(prevHealth + healthIncrease, 100));
         setInterval((prevTimer) => prevTimer + 10);
   
@@ -366,7 +366,7 @@ const [isAlive, setIsAlive] = useState(true)
       <div className="highest-score">Highest Score: <span> {highestScore}</span> </div>
       <div
   className={`health-bar ${
-    health <= 10 ? 'low-health' : health <= 30 ? 'lowred-health' : health <= 50 ? 'medium-health' :  health <= 70 ? 'lowCas-health' : ''
+    health <= 10 ? 'low-health' : health <= 30 ? 'lowred-health' : health <= 40 ? 'medium-health' :  health <= 70 ? 'lowCas-health' : ''
   }`}
 >
   <div className="health-bar-inner" style={{ width: `${health}%` }}></div>
