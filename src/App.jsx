@@ -50,6 +50,7 @@ const App = () => {
   const [appleTimer, setAppleTimer] = useState(null);
   const [colorTimer, setColorTimer] = useState(null);
 
+  //function for restart game
   const restartGame = () => {
     setSnake(INITIAL_SNAKE);
     setDirection(INITIAL_DIRECTION);
@@ -60,7 +61,7 @@ const App = () => {
     clearInterval(appleTimer);
     clearInterval(colorTimer);
     setIsAlive(true);
-    setHealth(100) // Agrega esta línea para marcar la serpiente como viva nuevamente
+    setHealth(100) 
   };
   
   

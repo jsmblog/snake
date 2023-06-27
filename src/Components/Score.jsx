@@ -4,21 +4,21 @@ import { useEffect, useState } from "react";
 const Score = ({score}) => {
     const [highestScore, setHighestScore] = useState(0);
     useEffect(() => {
-        // Obtener la puntuación más alta del localStorage
+        // Get the highest localStorage score
         const storedHighestScore = localStorage.getItem('snakeGameHighestScore');
       
         if (storedHighestScore) {
-          // Si la puntuación más alta está almacenada, actualizar el estado con su valor
+          // If the high score is stored, update the status with its value
           setHighestScore(parseInt(storedHighestScore));
         }
       }, []);
       
       useEffect(() => {
         if (score > highestScore) {
-          // Si la puntuación actual supera la puntuación más alta, actualizarla
+          // If the current score exceeds the highest score, update it
           setHighestScore(score);
       
-          // Almacenar la nueva puntuación más alta en el localStorage
+          // Store the new high score in the localStorage
           localStorage.setItem('snakeGameHighestScore', score.toString());
         }
       }, [score]);
