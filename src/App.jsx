@@ -2,19 +2,24 @@ import { useEffect, useRef, useState } from 'react';
 import soundPrincipal from '/sound-principal.mp3';
 import useSound from 'use-sound';
 import soundEating from '/sound-eating.mp3';
-import arrow from '../src/img/arrow.png';
 import soundExplosion from '/explosion.mp3';
+import GameOverCard from './Components/GameOverCard';
+import HealthBar from './Components/HealthBar';
+import DirectionBtn from './Components/DirectionBtn';
+import Score from './Components/Score';
+import arrow from '../src/img/arrow.png';
 
 
 const GRID_SIZE = 20;
 const INITIAL_SNAKE = [
   { x: 10, y: 10 },
-  { x: 10, y: 11 },
+  { x: 10, y: 11 }, // position snake
   { x: 10, y: 12 },
 ];
-const INITIAL_DIRECTION = 'up';
+
+const INITIAL_DIRECTION = 'up'; // snake up 
 const COLORS = ['blue', 'green', 'purple', 'gold', 'yellow', 'FireBrick', 'violet', 'DarkTurquoise', 'pink', 'Coral', 'Plum', 'brown', 'SeaGreen', 'peru', 'SteelBlue', 'MediumSlateBlue', 'Bisque', 'Wheat', 'DimGray', 'red', 'Chartreuse', 'Aqua'];
-const SCORE_MULTIPLIERS = [2, 4, 6, 8, 10, 2, 4, 6, 8, 2, 4, 6, 8, 10, 2, 4, 6, 8, 10 , 1 , 1 , 1];
+const SCORE_MULTIPLIERS = [2, 4, 6, 8, 10, 2, 4, 6, 8, 2, 4, 6, 8, 10, 2, 4, 6, 8, 10 , 1 , 1 , 1]; // value score
 const SPEED_INCREMENT = 5;
 const INITIAL_SPEED = 200;
 const APPLE_DURATION = 2900;
@@ -29,18 +34,18 @@ const App = () => {
     const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
     return { x: randomX, y: randomY, color: randomColor };
   };
-  const [highestScore, setHighestScore] = useState(0);
+
   const [health, setHealth] = useState(100);
-const [isAlive, setIsAlive] = useState(true)
+  const [score, setScore] = useState(0);
   const [playEating] = useSound(soundEating, { volume: 10 });
+  const [playExplosion] = useSound(soundExplosion, { volume: 1 });
+  const [isAlive, setIsAlive] = useState(true)
+  const [gameOver, setGameOver] = useState(false);
   const [playPrincipal, { stop }] = useSound(soundPrincipal, { volume: 1, loop: true });
   const [bombs, setBombs] = useState([]);
-  const [playExplosion] = useSound(soundExplosion, { volume: 1 });
   const [snake, setSnake] = useState(INITIAL_SNAKE);
   const [direction, setDirection] = useState(INITIAL_DIRECTION);
   const [apple, setApple] = useState(generateRandomApple());
-  const [gameOver, setGameOver] = useState(false);
-  const [score, setScore] = useState(0);
   const [speed, setSpeed] = useState(INITIAL_SPEED);
   const [appleTimer, setAppleTimer] = useState(null);
   const [colorTimer, setColorTimer] = useState(null);
@@ -61,6 +66,7 @@ const [isAlive, setIsAlive] = useState(true)
   
 
   useEffect(() => {
+    // function to handle movement by keys (arrows)
     const handleKeyPress = (event) => {
       if (event.keyCode === 37 && direction !== 'right') {
         setDirection('left');
@@ -85,20 +91,7 @@ const [isAlive, setIsAlive] = useState(true)
     const randomY = Math.floor(Math.random() * GRID_SIZE);
     return { x: randomX, y: randomY };
   };
-  useEffect(() => {
-    const bombInterval = setInterval(() => {
-      const newBombs = [];
-      for (let i = 0; i < 15; i++) {
-        newBombs.push(generateRandomBomb());
-      }
-      setBombs(newBombs);
-    }, 20000);
-  
-    return () => {
-      clearInterval(bombInterval);
-    };
-  }, []);
-    
+
   const moveSnake = useRef(null);
   useEffect(() => {
     const moveSnake = setInterval(() => {
@@ -123,7 +116,7 @@ const [isAlive, setIsAlive] = useState(true)
 
         newSnake.unshift(newHead);
         newSnake.pop();
-
+        // collisions
         if (
           newHead.x < 0 ||
           newHead.x >= GRID_SIZE ||
@@ -157,6 +150,7 @@ const [isAlive, setIsAlive] = useState(true)
     };
   }, [direction, speed ,  isAlive]);
 
+  // animation card game over
   const animationGameOver = (gameOver) ? "slide-in-right" : ""
   
 
@@ -165,36 +159,31 @@ const [isAlive, setIsAlive] = useState(true)
       const head = snake[0];
       const handleColorCollision = (color) => {
         if (color === 'red') {
-          // Reducir la velocidad a la mitad por 10 segundos
-          setSpeed((prevSpeed) => prevSpeed * 3);
+          // reduce speed to mid 7 seconds
+          setSpeed((prevSpeed) => prevSpeed * 3); 
           setTimeout(() => {
             setSpeed(INITIAL_SPEED);
           }, 7000);
         } else if (color === 'Chartreuse') {
-          // Duplicar la velocidad por 15 segundos
-          setSpeed((prevSpeed) => prevSpeed / 1.5);
+          // double speed 7 seconds
+          setSpeed((prevSpeed) => prevSpeed / 1.5); // here controls the amount speed , value for default (1.5)
           setTimeout(() => {
             setSpeed(INITIAL_SPEED);
           }, 7000);
         }else if (color === 'Aqua') {
-          const segmentsToCut = 4;
-          
-          // Verificar si la serpiente tiene la cantidad suficiente de segmentos para cortar
+          const segmentsToCut = 4; // segments into which the snake is cut , value for default (4) 
           if (snake.length > segmentsToCut) {
-            // Obtener los segmentos más recientes que se deben cortar
             const segmentsToRemove = snake.slice(-segmentsToCut);
         
-            // Verificar si los segmentos a cortar están presentes en el cuerpo de la serpiente
+            // Verify segments aviable of snake 
             const shouldCut = segmentsToRemove.every((segment) => snake.includes(segment));
         
             if (shouldCut) {
-              // Reducir la longitud de la serpiente eliminando los segmentos
+              // reduce segments of snake 
               setSnake((prevSnake) => prevSnake.slice(0, prevSnake.length - segmentsToCut));
             }
           }
-        }
-        
-              
+        }     
       };
   
       if (head.x === apple.x && head.y === apple.y) {
@@ -205,7 +194,7 @@ const [isAlive, setIsAlive] = useState(true)
         });
   
         const scoreMultiplier = SCORE_MULTIPLIERS[COLORS.indexOf(apple.color)];
-        const healthIncrease = 5.3;
+        const healthIncrease = 5.3; // time of increment health bar
         setHealth((prevHealth) => Math.min(prevHealth + healthIncrease, 100));
         setInterval((prevTimer) => prevTimer + 10);
   
@@ -213,7 +202,7 @@ const [isAlive, setIsAlive] = useState(true)
         setApple(generateRandomApple());
         playEating();
   
-        if (score % 10 === 0 && score !== 0) {
+        if (score % 10 === 0 && score !== 0) { // pick up speed after eating (10) apples
           setSpeed((prevSpeed) => Math.max(prevSpeed - SPEED_INCREMENT, 50));
         }
         if (apple.color === 'red' || apple.color === 'Chartreuse' || apple.color === 'Aqua') {
@@ -222,17 +211,18 @@ const [isAlive, setIsAlive] = useState(true)
       }
     };
   
-    if (health <= 0) {
+    if (health <= 0) { // controls health
       clearInterval(moveSnake);
       setGameOver(true);
-      setIsAlive(false); // Agrega esta línea para marcar la serpiente como no viva
+      setIsAlive(false); // snake died
     }
     checkCollision()
   }, [snake, apple, score, playEating]);
   
+  // effect for health bar state  
   useEffect(() => {
     const timerInterval = setInterval(() => {
-      setHealth((prevHealth) => prevHealth - 1);
+      setHealth((prevHealth) => prevHealth - 1); // here time is subtracted (-1)
     }, 1000);
     document.querySelector('.health-bar-inner').style.width = `${health}%`;
     return () => {
@@ -240,7 +230,7 @@ const [isAlive, setIsAlive] = useState(true)
     };
   }, []);
   
-  
+  // effect for generates bombs intervals//
 
   useEffect(() => {
     const changeAppleColor = () => {
@@ -286,39 +276,18 @@ const [isAlive, setIsAlive] = useState(true)
     const generateBombs = () => {
       const newBombs = [];
       for (let i = 0; i < 20; i++) {
-        newBombs.push(generateRandomBomb());
+        newBombs.push(generateRandomBomb()); // here for manipulate amount of bombs Default(20)
       }
       setBombs(newBombs);
     };
   
     const bombInterval = setInterval(generateBombs, 20000);
-    generateBombs(); // Generar bombas inmediatamente
+    generateBombs(); // Generate bombs 
   
     return () => {
       clearInterval(bombInterval);
     };
   }, []);
-  
-  useEffect(() => {
-    // Obtener la puntuación más alta del localStorage
-    const storedHighestScore = localStorage.getItem('snakeGameHighestScore');
-  
-    if (storedHighestScore) {
-      // Si la puntuación más alta está almacenada, actualizar el estado con su valor
-      setHighestScore(parseInt(storedHighestScore));
-    }
-  }, []);
-  
-  useEffect(() => {
-    if (score > highestScore) {
-      // Si la puntuación actual supera la puntuación más alta, actualizarla
-      setHighestScore(score);
-  
-      // Almacenar la nueva puntuación más alta en el localStorage
-      localStorage.setItem('snakeGameHighestScore', score.toString());
-    }
-  }, [score]);
-
   return (
     <div className="game-container">
       <h1 className='titleGame'>Snake Game</h1>
@@ -349,30 +318,12 @@ const [isAlive, setIsAlive] = useState(true)
 ))}
         </div>
       </div>
-      <div className="direction-buttons">
-        <button onClick={() => handleButtonClick('left')}> <span className='Arrows Arrows_left'><img width={40} src={arrow} alt="" /></span></button>
-        <button onClick={() => handleButtonClick('up')}> <span className='Arrows Arrows_up '><img width={40} src={arrow} alt="" /></span></button>
-        <button onClick={() => handleButtonClick('down')}> <span className='Arrows Arrows_down'><img width={40} src={arrow} alt="" /></span></button>
-        <button onClick={() => handleButtonClick('right')}> <span className='Arrows Arrows_right'><img width={40} src={arrow} alt="" /></span></button>
-      </div>
+      <DirectionBtn handleButtonClick={handleButtonClick} arrow={arrow} />
       {gameOver &&  (
-        <div className={`${animationGameOver} game-over`}>
-          <p className='GameOver'>Game Over!</p>
-          <p>Your Score: {score}</p>
-          <button className='BtnPlayAgain' onClick={restartGame}>Play Again</button>
-        </div>
+        <GameOverCard restartGame={restartGame} score={score} animationGameOver={animationGameOver} />
       )}
-      <div className="score">Score: <span className='CounterScore'> {score}</span></div>
-      <div className="highest-score">Highest Score: <span> {highestScore}</span> </div>
-      <div
-  className={`health-bar ${
-    health <= 10 ? 'low-health' : health <= 30 ? 'lowred-health' : health <= 40 ? 'medium-health' :  health <= 70 ? 'lowCas-health' : ''
-  }`}
->
-  <div className="health-bar-inner" style={{ width: `${health}%` }}></div>
-</div>
-
-
+      <Score score={score} />
+      <HealthBar health={health} />
     </div>
   );
 };

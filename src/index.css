@@ -5,12 +5,23 @@
   padding: 0;
   font-family: 'Arima', cursive;
 }
+:root {
+  --white : white;
+  --black : black;
+  --green-principal :#025464; 
+  --red :red;
+  --red-principal :#F45050;
+  --red-health-bar :rgba(255, 0, 0, 0.5);
+  --ccc :#ccc;
+  --blue-cyan :#3F72AF;
+  --body : #9BABB8;
+}
 @font-face {
   font-family: 'GameFont';
   src:url('fonts/gameFont.ttf');
 }
 body {
-  background-color: #9BABB8;
+  background-color: var(--body);
 }
 .game-container {
     width: 100%;
@@ -23,8 +34,8 @@ body {
     margin-top: 4rem;
   }
   .titleGame {
-    text-shadow: 1px 1px 1px white;
-    color: #025464;
+    text-shadow: 1px 1px 1px var(--white);
+    color: var(--green-principal) ;
     padding: 1rem 0;
     display: flex;
     justify-content: center;
@@ -37,31 +48,31 @@ body {
   
   .row {
     display: flex;
-    border: 1px solid #3F72AF;
-    box-shadow: 0 0 13px 2px #ccc;
+    border: 1px solid var(--blue-cyan);
+    box-shadow: 0 0 13px 2px var(--ccc);
   }
   
   .cell {
     width: 20px;
     height: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--ccc);
   }
   
   .snake-head {
     background-color:#5C8984;
     border-radius: 50%;
-    box-shadow: 0 0 50px 6px #3F72AF;
+    box-shadow: 0 0 50px 6px var(--blue-cyan);
   }
   
   .snake-body {
     border: 1px solid #85A389;
     background-color: #DFFFD8;
     border-radius:100%;
-    box-shadow: 0 0 50px 6px #3F72AF;
+    box-shadow: 0 0 50px 6px var(--blue-cyan);
   }
   
   .apple {
-    background-color: red;
+    background-color: var(--red);
   }
   
   h1,
@@ -69,13 +80,13 @@ body {
     text-align: center;
   }
   .CounterScore {
-    color: white;
-    text-shadow: 0 1px 1px black;
+    color: var(--white);
+    text-shadow: 0 1px 1px var(--black);
   }
   .score {
     position: absolute;
     top: 5rem;
-    color: #025464;
+    color: var(--green-principal);
   }
   .direction-buttons {
     margin-top: -.3rem;
@@ -101,12 +112,12 @@ body {
   }
   .cell.bomb {
     border-radius: 50%;
-    background-color: black;
-    box-shadow: 0 0 5px 2px white;
+    background-color: var(--black);
+    box-shadow: 0 0 5px 2px var(--white);
   }
   
   .direction-buttons button {
-    box-shadow: 3px 2px 5px 3.5px #025464;
+    box-shadow: 3px 2px 5px 3.5px var(--green-principal);
     display: flex;
     background-color: #DFFFD8;
     align-items: center;
@@ -128,7 +139,7 @@ right: 1.2rem;
   }
   */
 .game-over {
-  color: white;
+  color: var(--white);
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -145,27 +156,27 @@ right: 1.2rem;
 .GameOver {
   font-family: 'Press Start 2P', cursive;
   font-size: 1.5rem;
-  text-shadow: 1px 1px 1px black;
+  text-shadow: 1px 1px 1px var(--black);
 }
 .BtnPlayAgain {
   font-family: 'Press Start 2P', cursive;
   padding: 1.1rem 0;
   border-radius: 7px;
-  background-color: #F45050;
-  color: white;
+  background-color: var(--red-principal);
+  color: var(--white);
   margin: 0 1.2rem;
-  border: 2px solid black;
-  box-shadow: 0 0 3px 2px white;
+  border: 2px solid var(--black);
+  box-shadow: 0 0 3px 2px var(--white);
 }
 .highest-score {
   position: absolute;
   top: 5rem;
   right: .3rem;
-  color: #025464;
+  color:var(--green-principal);
 }
 .highest-score span {
-  color: #F45050;
-  text-shadow: 0 0 1px black;
+  color: var(--red-principal);
+  text-shadow: 0 0 1px var(--black);
 }
 .slide-in-right {
 	-webkit-animation: slide-in-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
@@ -203,7 +214,7 @@ right: 1.2rem;
   overflow: hidden;
   position: absolute;
   top: 8rem;
-  border: 2px solid white;
+  border: 2px solid var(--white);
 }
 
 .health-bar-inner {
@@ -218,9 +229,9 @@ right: 1.2rem;
     background-color: yellow;
   }
   .lowred-health .health-bar-inner {
-    background-color: red;
+    background-color: var(--red);
   }
 .low-health .health-bar-inner {
-  background-color: rgba(255, 0, 0, 0.5);
+  background-color: var(--red-health-bar);
 }
 
